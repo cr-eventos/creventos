@@ -117,6 +117,7 @@
 
     <header>
         <div class="logo">
+            <a href="index.html">
             <img src="greventosofi.png" alt="Logo" style="height: 50px;">
         </div>
         <nav>
@@ -136,9 +137,9 @@
     <div class="social-bar">
         <span>Siguenos en nuestras redes sociales!</span>
         <div class="social-icons">
-            <a href="#"><i class="fab fa-facebook-f"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-tiktok"></i></a>
+            <a href="https://www.facebook.com/p/Eventos-CR-61586548657238/?http_ref=eyJ0cyI6MTc3ODc5OTUxNDAwMCwiciI6IiJ9&hr=1"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://www.instagram.com/eventoscrkp/"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.tiktok.com/@eventos.cr3"><i class="fab fa-tiktok"></i></a>
         </div>
     </div>
 
@@ -157,7 +158,7 @@
                 <p><strong><i class="fas fa-map-marker-alt"></i> Lugar:</strong> General Cepeda, Pueblo Mágico</p>
                 
                 <div class="botones-group">
-                    <a href="https://maps.google.com" target="_blank" class="btn-comun btn-mapa">
+                    <a href="https://www.google.com/maps/search/CAMPO+DE+BEISBOL/@25.378966,-101.4713214,18z?entry=ttu&g_ep=EgoyMDI2MDUxMi4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="btn-comun btn-mapa">
                         <i class="fas fa-location-arrow"></i> VER UBICACIÓN
                     </a>
                     <button onclick="abrirMapa()" class="btn-comun btn-reserva">
@@ -172,7 +173,7 @@
         <div class="modal-content">
             <span class="close-modal" onclick="cerrarMapa()">×</span>
             <h3>Mapa de Disponibilidad</h3>
-            <p id="status-carga" style="color: #666; font-size: 0.9rem;">Cargando mesas desde Sheets...</p>
+            <p id="status-carga" style="color: #666; font-size: 0.9rem;">Cargando mesas...</p>
 
             <div class="leyenda">
                 <span><div class="color-box" style="background: #25d366;"></div> Libre</span>
@@ -217,12 +218,12 @@
             <div class="tarjeta">
                 <div class="tarjeta-banco">BANCO AZTECA</div>
                 <div class="tarjeta-numero">4152 0000 0000 0000</div>
-                <div class="tarjeta-nombre">Juan Pérez</div>
+                <div class="tarjeta-nombre">Karen Patricia Posada</div>
             </div>
             <div class="tarjeta">
                 <div class="tarjeta-banco">OXXO / SALDAZO</div>
                 <div class="tarjeta-numero">4766 0000 0000 0000</div>
-                <div class="tarjeta-nombre">Juan Pérez</div>
+                <div class="tarjeta-nombre">Diego De Jesus Pérez</div>
             </div>
         </div>
     </section>
@@ -281,7 +282,7 @@
             document.getElementById("num-mesa-txt").innerText = num;
             btnWha.style.display = "inline-flex";
             
-            const miTel = "521234567890"; // <--- PON AQUÍ TU TELÉFONO
+            const miTel = "5218442953000"; // <--- PON AQUÍ TU TELÉFONO
             const msj = encodeURIComponent(`Hola CR Eventos, vi el mapa y quiero reservar la mesa número ${num}.`);
             btnWha.href = `https://wa.me/${miTel}?text=${msj}`;
         }
