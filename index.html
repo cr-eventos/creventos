@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CR Eventos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primario: #25d366; 
+            --oscuro: #1a1a1a;
+            --dorado: #d4af37;
+            --gris-claro: #f4f4f4;
+            --gris-boton: #6c757d; 
+        }
+
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; color: #333; }
+        
+        header { background: white; padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
+        .logo { font-weight: bold; font-size: 1.5rem; color: var(--oscuro); }
+        nav a { margin-left: 20px; text-decoration: none; color: var(--oscuro); font-weight: 500; }
+
+        .hero {
+            position: relative; height: 450px; 
+            background: url('https://i.postimg.cc/nhVtgK8r/portada.jpg') center/cover no-repeat;
+            display: flex; align-items: center; justify-content: center; overflow: hidden;
+        }
+
+        .hero-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 187, 0, 0.8); mix-blend-mode: multiply; 
+        }
+
+        .hero-content { position: relative; z-index: 2; text-align: center; }
+        .main-logo { max-width: 500px; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5)); transform: rotate(-3deg); }
+
+        .social-bar {
+            background: #e0e0e0; padding: 10px 5%; display: flex; justify-content: center;
+            align-items: center; gap: 15px; font-size: 0.85rem; color: #555; border-bottom: 1px solid #ccc;
+        }
+
+        .social-icons { display: flex; gap: 10px; }
+        .social-icons a {
+            color: #333; font-size: 1.1rem; text-decoration: none; background: #bbb;
+            width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
+            border-radius: 50%; transition: 0.3s;
+        }
+        .social-icons a:hover { background: #2b2b2b; color: white; }
+
+        section { padding: 60px 10%; }
+        h2 { text-align: center; border-bottom: 2px solid var(--dorado); display: inline-block; padding-bottom: 10px; margin-bottom: 30px; }
+        .center { text-align: center; }
+
+        .evento-card {
+            display: flex; background: white; border-radius: 15px; overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: 0.3s; border: 1px solid #eee;
+            max-width: 900px; margin: 0 auto;
+        }
+
+        .evento-card img { width: 350px; height: auto; object-fit: cover; }
+
+        .info-evento { padding: 30px; display: flex; flex-direction: column; justify-content: center; flex-grow: 1; }
+        .info-evento h3 { margin-top: 0; font-size: 1.8rem; color: #1a1a1a; }
+
+        .botones-group { display: flex; gap: 15px; margin-top: 25px; }
+
+        .btn-comun {
+            flex: 1; padding: 12px 20px; text-decoration: none; font-weight: bold;
+            text-align: center; border-radius: 8px; display: flex; align-items: center;
+            justify-content: center; gap: 8px; transition: all 0.3s ease; font-size: 0.95rem;
+            cursor: pointer; border: none;
+        }
+
+        .btn-mapa { background-color: var(--gris-boton); color: white; }
+        .btn-reserva { background-color: var(--primario); color: white; }
+
+        /* --- ESTILOS DEL MODAL (ACTUALIZADO) --- */
+        .modal {
+            display: none; position: fixed; z-index: 2000; left: 0; top: 0;
+            width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: white; margin: 2% auto; padding: 25px; border-radius: 15px;
+            width: 90%; max-width: 550px; text-align: center; position: relative;
+        }
+
+        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; color: #333; }
+
+        /* --- ESTILOS MAPA INTERACTIVO --- */
+        #contenedor-svg { width: 100%; max-width: 450px; margin: 20px auto; background: #f9f9f9; border-radius: 10px; padding: 10px; }
+        .mesa-svg { transition: fill 0.3s ease; cursor: pointer; }
+        .mesa-svg.libre { fill: #25d366; }
+        .mesa-svg.ocupado { fill: #ff4d4d; cursor: not-allowed; pointer-events: none; }
+        .mesa-svg.seleccionada { fill: #d4af37 !important; stroke: #333; stroke-width: 15px; }
+        .numero-mesa { fill: white; font-weight: bold; font-size: 60px; pointer-events: none; }
+
+        .leyenda { display: flex; justify-content: center; gap: 15px; margin-bottom: 15px; font-size: 0.85rem; }
+        .color-box { width: 12px; height: 12px; border-radius: 2px; display: inline-block; }
+
+        /* --- TARJETAS DE PAGO --- */
+        .pagos-container { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+        .tarjeta { background: var(--oscuro); color: white; padding: 20px; border-radius: 15px; min-width: 250px; text-align: left; }
+        .tarjeta-banco { font-size: 0.8rem; text-transform: uppercase; opacity: 0.8; }
+        .tarjeta-numero { font-size: 1.2rem; letter-spacing: 2px; margin: 15px 0; font-family: monospace; }
+
+        footer { background: var(--oscuro); color: white; text-align: center; padding: 30px; }
+
+        @media (max-width: 768px) {
+            .evento-card { flex-direction: column; }
+            .evento-card img { width: 100%; height: 250px; }
+            .botones-group { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <img src="greventosofi.png" alt="Logo" style="height: 50px;">
+        </div>
+        <nav>
+            <a href="#quienes-somos">Quiénes somos</a>
+            <a href="#eventos">Eventos</a>
+            <a href="#contacto">Contacto</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <img src="marcandoladiferencia1.png" alt="Logo" class="main-logo">
+        </div>
+    </section>
+
+    <div class="social-bar">
+        <span>Siguenos en nuestras redes sociales!</span>
+        <div class="social-icons">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-tiktok"></i></a>
+        </div>
+    </div>
+
+    <section id="quienes-somos" class="center">
+        <h2>Quiénes Somos?</h2>
+        <p>Somos una empresa dedicada a la organización de los mejores eventos locales...</p>
+    </section>
+
+    <section id="eventos" style="background-color: var(--gris-claro);">
+        <div class="evento-card">
+            <img src="IMG_1200.JPG" alt="Flyer Evento">
+            <div class="info-evento">
+                <h3>Concierto Marco Marroquin</h3>
+                <p><strong><i class="far fa-calendar-alt"></i> Fecha:</strong> 13 de Junio 2026</p>
+                <p><strong><i class="far fa-clock"></i> Hora:</strong> 7:00 PM</p>
+                <p><strong><i class="fas fa-map-marker-alt"></i> Lugar:</strong> General Cepeda, Pueblo Mágico</p>
+                
+                <div class="botones-group">
+                    <a href="https://maps.google.com" target="_blank" class="btn-comun btn-mapa">
+                        <i class="fas fa-location-arrow"></i> VER UBICACIÓN
+                    </a>
+                    <button onclick="abrirMapa()" class="btn-comun btn-reserva">
+                        <i class="fas fa-ticket-alt"></i> RESERVAR LUGAR
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="modalMapa" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="cerrarMapa()">×</span>
+            <h3>Mapa de Disponibilidad</h3>
+            <p id="status-carga" style="color: #666; font-size: 0.9rem;">Cargando mesas desde Sheets...</p>
+
+            <div class="leyenda">
+                <span><div class="color-box" style="background: #25d366;"></div> Libre</span>
+                <span><div class="color-box" style="background: #ff4d4d;"></div> Ocupado</span>
+                <span><div class="color-box" style="background: #d4af37;"></div> Tu selección</span>
+            </div>
+
+            <div id="contenedor-svg">
+                <svg viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
+                    <circle id="mesa-1" class="mesa-svg libre" cx="150" cy="200" r="100" onclick="seleccionarMesa('mesa-1')"/>
+                    <text x="150" y="220" text-anchor="middle" class="numero-mesa">1</text>
+                    <circle id="mesa-2" class="mesa-svg libre" cx="500" cy="200" r="100" onclick="seleccionarMesa('mesa-2')"/>
+                    <text x="500" y="220" text-anchor="middle" class="numero-mesa">2</text>
+                    <circle id="mesa-3" class="mesa-svg libre" cx="850" cy="200" r="100" onclick="seleccionarMesa('mesa-3')"/>
+                    <text x="850" y="220" text-anchor="middle" class="numero-mesa">3</text>
+                    <circle id="mesa-4" class="mesa-svg libre" cx="150" cy="500" r="100" onclick="seleccionarMesa('mesa-4')"/>
+                    <text x="150" y="520" text-anchor="middle" class="numero-mesa">4</text>
+                    <circle id="mesa-5" class="mesa-svg libre" cx="500" cy="500" r="100" onclick="seleccionarMesa('mesa-5')"/>
+                    <text x="500" y="520" text-anchor="middle" class="numero-mesa">5</text>
+                    <circle id="mesa-6" class="mesa-svg libre" cx="850" cy="500" r="100" onclick="seleccionarMesa('mesa-6')"/>
+                    <text x="850" y="520" text-anchor="middle" class="numero-mesa">6</text>
+                    <circle id="mesa-7" class="mesa-svg libre" cx="150" cy="800" r="100" onclick="seleccionarMesa('mesa-7')"/>
+                    <text x="150" y="820" text-anchor="middle" class="numero-mesa">7</text>
+                    <circle id="mesa-8" class="mesa-svg libre" cx="500" cy="800" r="100" onclick="seleccionarMesa('mesa-8')"/>
+                    <text x="500" y="820" text-anchor="middle" class="numero-mesa">8</text>
+                    <circle id="mesa-9" class="mesa-svg libre" cx="850" cy="800" r="100" onclick="seleccionarMesa('mesa-9')"/>
+                    <text x="850" y="820" text-anchor="middle" class="numero-mesa">9</text>
+                </svg>
+            </div>
+
+            <div class="center">
+                <a id="btn-whatsapp-dinamico" href="#" target="_blank" class="btn-comun btn-reserva" style="display: none; width: auto; margin: 0 auto;">
+                    <i class="fab fa-whatsapp"></i> CONFIRMAR MESA <span id="num-mesa-txt"></span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <section id="pagos">
+        <div class="center"><h2>Información de Pago</h2></div>
+        <div class="pagos-container">
+            <div class="tarjeta">
+                <div class="tarjeta-banco">BANCO AZTECA</div>
+                <div class="tarjeta-numero">4152 0000 0000 0000</div>
+                <div class="tarjeta-nombre">Juan Pérez</div>
+            </div>
+            <div class="tarjeta">
+                <div class="tarjeta-banco">OXXO / SALDAZO</div>
+                <div class="tarjeta-numero">4766 0000 0000 0000</div>
+                <div class="tarjeta-nombre">Juan Pérez</div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2026 CR-Eventos - Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        const URL_SHEETS = "https://script.google.com/macros/s/AKfycbzbu690vQHs0cUnVyGqlOySAdKO3JOh_X_W9m-_alTRvneBwkkiDeBsnP1vOwgARpwn1Q/exec";
+
+        function abrirMapa() {
+            document.getElementById("modalMapa").style.display = "block";
+            actualizarMapaDesdeSheets();
+        }
+
+        function cerrarMapa() {
+            document.getElementById("modalMapa").style.display = "none";
+        }
+
+        async function actualizarMapaDesdeSheets() {
+            const status = document.getElementById("status-carga");
+            status.innerText = "Sincronizando disponibilidad...";
+            try {
+                const response = await fetch(URL_SHEETS + "?t=" + new Date().getTime());
+                const datos = await response.json();
+
+                datos.forEach(item => {
+                    const mesa = document.getElementById(item.id.toLowerCase());
+                    if(mesa) {
+                        if(item.estado.toLowerCase() === "ocupado") {
+                            mesa.classList.remove('libre');
+                            mesa.classList.add('ocupado');
+                        } else {
+                            mesa.classList.remove('ocupado');
+                            mesa.classList.add('libre');
+                        }
+                    }
+                });
+                status.innerText = "Mapa actualizado. Selecciona una mesa verde.";
+            } catch (e) {
+                status.innerText = "Error al conectar con la base de datos.";
+            }
+        }
+
+        function seleccionarMesa(id) {
+            document.querySelectorAll('.mesa-svg').forEach(m => m.classList.remove('seleccionada'));
+            const mesa = document.getElementById(id);
+            
+            if(mesa.classList.contains('ocupado')) return;
+
+            mesa.classList.add('seleccionada');
+            const num = id.split('-')[1];
+            
+            const btnWha = document.getElementById("btn-whatsapp-dinamico");
+            document.getElementById("num-mesa-txt").innerText = num;
+            btnWha.style.display = "inline-flex";
+            
+            const miTel = "521234567890"; // <--- PON AQUÍ TU TELÉFONO
+            const msj = encodeURIComponent(`Hola CR Eventos, vi el mapa y quiero reservar la mesa número ${num}.`);
+            btnWha.href = `https://wa.me/${miTel}?text=${msj}`;
+        }
+
+        window.onclick = function(event) {
+            if (event.target == document.getElementById("modalMapa")) cerrarMapa();
+        }
+    </script>
+</body>
+</html>
